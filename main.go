@@ -6,6 +6,6 @@ import (
 )
 
 func main() {
-	source.DrawText("Let's begin our sea battle, arr!")
-	source.DrawText(http.TestPackage())
+	source.DrawText("Let's begin our sea battle, arr!", false)
+	source.DrawText(http.TestPackage(), true)
 }
