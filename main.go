@@ -1,9 +1,11 @@
 package main
 
 import (
-	"fmt"
+	http "sea-of-pirates/HTTP"
+	source "sea-of-pirates/Source"
 )
 
 func main() {
-	fmt.Println("Let's begin our sea battle, arr!")
+	source.DrawText("Let's begin our sea battle, arr!")
+	source.DrawText(http.TestPackage())
 }

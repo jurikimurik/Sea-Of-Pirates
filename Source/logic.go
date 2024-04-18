@@ -2,6 +2,6 @@ package source
 
 import "fmt"
 
-func drawText(str string) {
+func DrawText(str string) {
 	fmt.Println(str)
 }
