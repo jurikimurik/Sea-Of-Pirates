@@ -91,8 +91,8 @@ func GetMyGameBoard() Response {
 //
 // Response - All in one structure that have neccessary info of HTTP Request
 func Fire(coord string) Response {
-	parameters := map[string]string{"coord": coord}
-	return call(POST, "game/fire", parameters, nil, true)
+	jParam := map[string]any{"coord": coord}
+	return call(POST, "game/fire", nil, jParam, true)
 }
 
 // --- OPTIONAL ----------------
