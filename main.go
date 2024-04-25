@@ -1,9 +1,8 @@
 package main
 
 import (
-	http "sea-of-pirates/http"
+	http "sea-of-pirates/HTTP"
 	source "sea-of-pirates/source"
-	"strconv"
 )
 
 func main() {
@@ -11,9 +10,9 @@ func main() {
 	//source.DrawText(http.TestPackage(), true)
 	//source.JSONTest()
 
-	//_, body, statusCode, _ := http.Call(http.GET, "stats", nil, nil)
-	//source.DrawText(string(body), true)
-	header, _, statusCode, _ := http.Call(http.POST, "game", nil, source.JSONGetDummy())
-	source.DrawText(header.Get("x-auth-token"), true)
-	source.DrawText(strconv.Itoa(statusCode), true)
+	resp := http.Call(http.GET, "stats", nil, nil)
+	source.DrawText(string(resp.Body), true)
+	//header, _, statusCode, _ := http.Call(http.POST, "game", nil, source.JSONGetDummy())
+	//source.DrawText(header.Get("x-auth-token"), true)
+	//source.DrawText(strconv.Itoa(statusCode), true)
 }

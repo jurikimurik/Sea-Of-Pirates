@@ -19,6 +19,22 @@ const (
 	DELETE = "DELETE"
 )
 
+// Response is a all-in-one structure that have all neccessary information of HTTP request:
+//
+// http.Header - Header of the HTTP request
+//
+// int - Status code after the HTTP request
+//
+// []byte - Readed body of the HTTP request
+//
+// error - Error that might occured while calling HTTP request!
+type Response struct {
+	Header     http.Header
+	Body       []byte
+	StatusCode int
+	Err        error
+}
+
 // ----- SERVER -----------------------------------------------------------------------
 
 // --- BASIC -------------------
@@ -51,14 +67,8 @@ const (
 //
 //	Returns:
 //
-// http.Header - Header of the HTTP request
-//
-// int - Status code after the HTTP request
-//
-// []byte - Readed body of the HTTP request
-//
-// error - Error that might occured while calling this method!
-func Call(TYPE string, addURL string, parameters map[string]string, jsonParameters map[string]any) (http.Header, []byte, int, error) {
+// Response - All in one structure that have neccessary info of HTTP Request
+func Call(TYPE string, addURL string, parameters map[string]string, jsonParameters map[string]any) Response {
 
 	// Creating URL with parameters
 	finalUrl := urlWithParameters(parameters, addURL)
@@ -66,7 +76,7 @@ func Call(TYPE string, addURL string, parameters map[string]string, jsonParamete
 	// Creating JSON data to send
 	json_data, err := json.Marshal(jsonParameters)
 	if err != nil {
-		return nil, []byte{}, -1, err
+		return Response{nil, []byte{}, -1, err}
 	}
 
 	// Preparing variables
@@ -106,7 +116,7 @@ func Call(TYPE string, addURL string, parameters map[string]string, jsonParamete
 	}
 
 	if errHttp != nil {
-		return nil, []byte{}, -1, err
+		return Response{nil, []byte{}, -1, err}
 	}
 
 	// Reading the header and body
@@ -115,7 +125,10 @@ func Call(TYPE string, addURL string, parameters map[string]string, jsonParamete
 	statusCode = resp.StatusCode
 
 	resp.Body.Close()
-	return header, body, statusCode, errHttp
+
+	//Packing all information into one single response
+	packagedResponse := Response{header, body, statusCode, errHttp}
+	return packagedResponse
 }
 
 // Function for creating final URL with parameters after "?"
