@@ -157,7 +157,6 @@ func FillStatesWith(board *gui.Board, states *[10][10]gui.State, places []interf
 	}
 
 	board.SetStates(*states)
-	//ui.Draw(board)
 }
 
 // CreateBoard is creating a board and instatly draws it after the configuration of states.
@@ -183,6 +182,9 @@ func CreateBoard(x int, y int, cfg *gui.BoardConfig, shipPlaces []interface{}) (
 	//Creating the new board
 	Board := gui.NewBoard(x, y, cfg)
 
+	//Do not forget to draw board on exit!
+	defer ui.Draw(Board)
+
 	//Default configuration (empty spaces)
 	states := SetupFillBoard(Board)
 
@@ -191,8 +193,6 @@ func CreateBoard(x int, y int, cfg *gui.BoardConfig, shipPlaces []interface{}) (
 		FillStatesWith(Board, &states, shipPlaces, gui.Ship, false)
 		return Board, states
 	}
-
-	ui.Draw(Board)
 
 	return Board, states
 }
@@ -262,12 +262,10 @@ func enterGameFlow() {
 	//Creating Player board
 	var playerBoard *gui.Board
 	playerBoard, playerStates = CreateBoard(1, 5, nil, setupShipsData)
-	ui.Draw(playerBoard)
 
 	//Creating Enemy board
 	var enemyBoard *gui.Board
 	enemyBoard, opponentStates = CreateBoard(50, 5, nil, nil)
-	ui.Draw(enemyBoard)
 
 	//Real game flow (loop)
 	for {
@@ -337,6 +335,10 @@ func enterGameFlow() {
 		//Repeat until the end of the game
 	}
 
+	//Cleaning up the boards
+	ui.Remove(playerBoard)
+	ui.Remove(enemyBoard)
+
 	EndOfGame()
 }
 
@@ -350,7 +352,7 @@ func EndOfGame() {
 	}
 	dataMap := jsonToMap(status.Body)
 
-	gameResultTest := DrawGUIText(25, 25, dataMap["last_game_status"].(string), nil)
+	gameResultTest := DrawGUIText(1, 1, dataMap["last_game_status"].(string), nil)
 	WaitSeconds(5)
 	ui.Remove(gameResultTest)
 }
