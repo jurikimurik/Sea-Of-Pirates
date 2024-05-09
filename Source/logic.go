@@ -16,6 +16,7 @@ import (
 // ----- GLOBAL  ----------------------------------------------------------------------
 var playerStates [10][10]gui.State
 var opponentStates [10][10]gui.State
+var errorGUIConfig *gui.TextConfig
 var ui *gui.GUI
 
 // ----- GUI     ----------------------------------------------------------------------
@@ -384,14 +385,22 @@ func DrawText(str string, newLine bool) {
 }
 
 // ----- ERRORS -----------------------------------------------------------------------
-
 func errorCreate(str string) error {
 	return errors.New(str)
 }
 
 func errorOccured(err error) {
 	// TODO: In future, let error print to LOG
-	DrawText("ERROR: "+err.Error(), true)
+
+	//If there is no config, create one.
+	if errorGUIConfig == nil {
+		errorGUIConfig = gui.NewTextConfig()
+		errorGUIConfig.BgColor = gui.Red
+		errorGUIConfig.FgColor = gui.Black
+	}
+
+	//Draw warning
+	DrawGUITextFor(50, 0, err.Error(), errorGUIConfig, 5)
 }
 
 // ----- INPUT   ----------------------------------------------------------------------
